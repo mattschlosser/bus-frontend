@@ -1,4 +1,12 @@
-# bus-frontend
+# bus-frontend 🚌  
+
+This is the frontend project for https://bus.mattschlosser.me 
+
+See https://github.com/mattschlosser/bus for a full explanation
+
+## Front end
+
+This project uses Vue.js. Will slowly add new features using Vuetify to help. 
 
 ## Project setup
 ```
