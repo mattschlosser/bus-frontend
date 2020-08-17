@@ -2,11 +2,14 @@
   <v-container>
     <div class='content'>
       <div class='header'>
-        <img style="display:none;" id="map" src="http://bus.mattschlosser.me/map"/>
+        <img style="display:none;" id="map" src="/map"/>
         <h1>Edmonton Bus Data Visualizer</h1>
+        <b>
+        Interested in finding an electric bus? Visit the 
+        <router-link to="/electric">Electric Bus Finder</router-link></b><br/><br/>
         This is a simple interface to show Edmonton bus data. 
         See <a href="https://github.com/mattschlosser/bus">https://github.com/mattschlosser/bus</a> for more info<br/>
-        <basic-options props.sync="speed"/>
+        <basic-options speed.sync="speed"/>
         <br/>
       </div>
       <div id="canvas-container" class='bus'>
@@ -39,8 +42,6 @@ import BasicOptions from "./BasicOptions";
       interval: null,
       timeout: null
     }),
-    created() {
-    }, 
     mounted() {
       document.getElementById('map').onload = () => {
         this.map = document.getElementById("map");  
@@ -52,6 +53,10 @@ import BasicOptions from "./BasicOptions";
           clearTimeout(timeout);
           timeout = setTimeout(() => ['canvas1', 'canvas2'].forEach(adjustCanvas), 16) // 60 fps = 16 ms per frame
       }
+    },
+    destroyed() {
+      clearTimeout(this.timeout);
+      clearInterval(this.i);
     },
     methods: {
       adjustCanvas(name) {
@@ -95,7 +100,7 @@ import BasicOptions from "./BasicOptions";
         let {draw} = this;
         Object.keys(configs).forEach(key => {
           let time = `${configs[key].time.substr(0, 3)}${this.start.toLocaleString('en', {minimumIntegerDigits: 2})}`
-          fetch(`http://bus.mattschlosser.me/bus/${configs[key].date}/${time}/4`, {method: 'get'})
+          fetch(`/bus/${configs[key].date}/${time}/4`, {method: 'get'})
             .then(res => res.json())
             // not verified - but I think the new ETS electric fleet is numbered 8000+
             .then(rows => rows.filter(e => configs[key].electric ? e.bus >= 8000 : true))
