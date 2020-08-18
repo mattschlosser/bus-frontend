@@ -10,15 +10,18 @@
     <v-list
       dark
       max-width="450"
+      id='bus-list'
       style="height: 64vh; box-sizing: border-box; overflow: auto; margin: 0 auto;"
     >
       <v-list-item>
-        <v-btn block small color="primary" @click="refresh">REFRESH</v-btn>
+        <v-btn block small color="primary" @click="refresh" :disabled="loading">
+          {{ loading ? `REFRESHING` : 'REFRESH' }}
+        </v-btn>
       </v-list-item>
-      <template v-if="electricBuses.length && !loading">
+      <template v-if="electricBuses.length && !(loading && firstTime)">
         <v-list-item-group v-model="active">
           <template v-for="bus in electricBuses">
-            <v-list-item :value="bus.bus" dark :key="bus.bus" @click="listClickHandler(bus)">
+            <v-list-item :value="bus.bus" dark :key="bus.bus" :id="active == bus.bus ? 'active' : null">
               <v-list-item-content>
                 <v-list-item-title>
                   <b>{{bus.route.route_id}}</b>
@@ -249,6 +252,8 @@ window.initMap = async () => {
     ],
   });
 };
+const REFRESH_INTERVAL = 60000; // 1 minute
+// import goTo from 'vuetify/es5/services';
 export default {
   data() {
     return {
@@ -259,6 +264,7 @@ export default {
       markers: [],
       active: null,
       firstTime: true,
+      i: null, // holder for timer interval
     };
   },
   computed: {
@@ -266,12 +272,26 @@ export default {
       return this.buses.filter((e) => e.bus >= 8000);
     },
   },
+  watch: {
+    active(val) {
+      if (val) {
+        let bus = this.buses.find(bus => bus.bus == val);
+        this.listClickHandler(bus);
+      }
+    }
+  },
   created() {
     let x = document.createElement("script");
+    x.id = 'google-maps'
     x.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.VUE_APP_MAPS_API_KEY}&callback=initMap`;
     document.querySelector("body").append(x);
     // get a list of electric busses
     this.refresh();
+    this.i = setInterval(this.refresh, REFRESH_INTERVAL);
+  },
+  destroyed() {
+    document.querySelector('#google-maps').remove()
+    clearInterval(i);
   },
   methods: {
     // fetch the bus route
@@ -291,7 +311,7 @@ export default {
         }
         this.firstTime = false;
       } // if the map has not loaded, then location will be set to the lat, lng above when it does
-      this.buses = [];
+      // this.buses = [];
       let d = new Date().valueOf();
       fetch(`/bus/${d}/`)
         .then((r) => r.json())
@@ -328,6 +348,13 @@ export default {
                       position: { lat, lng },
                       map,
                     });
+                    marker.bus = bus;
+                    marker.addListener('click', () => {
+                      this.active = bus
+                      this.$nextTick(() =>
+                        this.$vuetify.goTo('#active', {container: '#bus-list'})
+                      )
+                    });
                     marker.updated = true;
                     this.markers[bus] = marker;
                   }
@@ -343,7 +370,14 @@ export default {
               }
               this.buses = buses;
             })
-            .finally(() => (this.loading = false));
+            .finally(() => {
+              this.loading = false
+              this.$nextTick(() => {
+                if (this.active) {
+                  this.$vuetify.goTo('#active', {container: '#bus-list'});
+                }
+              })
+            });
         });
     },
     route(trip) {
