@@ -310,14 +310,14 @@ export default {
           () => res()
         );
       });
-      // make sure the mpa hsa loaded
+      // make sure the map has loaded
       if (this.firstTime) {
         if (map) {
           map.setCenter({ lat, lng });
-        }
+        } 
         this.firstTime = false;
       } // if the map has not loaded, then location will be set to the lat, lng above when it does
-      // this.buses = [];
+
       let d = new Date().valueOf();
       fetch(`/bus/${d}/`)
         .then((r) => r.json())
@@ -325,15 +325,17 @@ export default {
           Promise.all(
             buses
               .filter(({ bus }) => bus >= 8000)
-              .map(async (bus) => {
+              .map(async (bus) => { 
                 bus.route = await this.route(bus.trip);
+                // simple calculation to determine distance of bus from user's location
                 bus.dist = Math.sqrt(
                   (lat - bus.lat) ** 2 + (lng - bus.long) ** 2
                 );
                 return bus;
               })
           )
-            .then((buses) => {
+            .then(buses => {
+              // sort buses based on distance from user
               buses.sort(({ dist: a }, { dist: b }) => a - b);
               if (map) {
                 // mark each marker as not updated
@@ -379,6 +381,8 @@ export default {
             .finally(() => {
               this.loading = false
               this.$nextTick(() => {
+                // if a bus is selected and has moved up or down the list, 
+                // scroll the user to the new position in the list automatically
                 if (this.active) {
                   this.$vuetify.goTo('#active', {container: '#bus-list'});
                 }
