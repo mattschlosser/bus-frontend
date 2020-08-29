@@ -298,11 +298,17 @@ export default {
     async refresh() {
       this.loading = true;
       await new Promise((res) => {
-        navigator.geolocation.getCurrentPosition((locale) => {
-          lat = locale.coords.latitude;
-          lng = locale.coords.longitude;
-          res();
-        });
+        // ask for location
+        navigator.geolocation.getCurrentPosition(
+          // user granted permission
+          (locale) => {
+            lat = locale.coords.latitude;
+            lng = locale.coords.longitude;
+            res();
+          }, 
+          // user denies permission
+          () => res()
+        );
       });
       // make sure the mpa hsa loaded
       if (this.firstTime) {
