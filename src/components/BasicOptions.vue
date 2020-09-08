@@ -1,6 +1,6 @@
 <template>
     <div class="mt-3">
-      Update Interval (ms): <input v-model="speed" @change="reset"/>
+      Update Interval (ms): <input :value="speed" @change="reset"/>
     </div>
 </template>
 <script> 
@@ -12,8 +12,8 @@ export default {
     }
   }, 
   methods: {
-    reset() {
-      this.$emit('update:speed', this.speed)
+    reset($event) {
+      this.$emit('update:speed', $event.target.value)
     }
   }
 }

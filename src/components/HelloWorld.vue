@@ -9,7 +9,7 @@
         <router-link to="/electric">Electric Bus Finder</router-link></b><br/><br/>
         This is a simple interface to show Edmonton bus data. 
         See <a href="https://github.com/mattschlosser/bus">https://github.com/mattschlosser/bus</a> for more info<br/>
-        <basic-options speed.sync="speed"/>
+        <basic-options :speed="speed" @update:speed="($event) => speed = $event"/>
         <br/>
       </div>
       <div id="canvas-container" class='bus'>
