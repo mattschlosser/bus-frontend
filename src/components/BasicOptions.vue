@@ -13,7 +13,7 @@ export default {
   }, 
   methods: {
     reset($event) {
-      this.$emit('update:speed', $event.target.value)
+      this.$emit('update:speed', Number($event.target.value))
     }
   }
 }
