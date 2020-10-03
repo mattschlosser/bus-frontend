@@ -14,16 +14,16 @@
           href="https://github.com/mattschlosser/bus"
         >https://github.com/mattschlosser/bus</a> for more info
         <br />
-        <basic-options :speed="speed" @update:speed="updateSpeed" />
+        <basic-options :speed="speed" @update:speed="speed = $event" />
         <br />
       </div>
       <div id="canvas-container" class="bus">
         <template v-for="canvas in ['canvas1', 'canvas2']">
-            <div style="display: inline-block" :key="canvas"> 
-                <bus-map :buses="buses[canvas]" :name="canvas" />
-                <br />
-                <interface-controls :for="canvas"></interface-controls>
-            </div>
+          <div style="display: inline-block" :key="canvas">
+            <bus-map :buses="buses[canvas]" :name="canvas" />
+            <br />
+            <interface-controls :for="canvas"></interface-controls>
+          </div>
         </template>
       </div>
     </div>
@@ -70,24 +70,20 @@ export default {
     clearInterval(this.i);
   },
   methods: {
-    updateSpeed(event) {
-      // event
-      this.speed = event;
-    },
     updater() {
-      //   let { draw } = this;
       Object.keys(configs).forEach((key) => {
         let time = `${configs[key].time.substr(
           0,
           3
         )}${this.start.toLocaleString("en", { minimumIntegerDigits: 2 })}`;
         fetch(`/bus/${configs[key].date}/${time}/4`, { method: "get" })
-          .then((res) => res.json())            
-          .then(rows => rows.filter(e => configs[key].electric ? e.bus >= 8000 : true))
+          .then((res) => res.json())
+          .then((rows) =>
+            rows.filter((e) => (configs[key].electric ? e.bus >= 8000 : true))
+          )
           .then((buses) => (this.buses[key] = buses));
       });
-      this.start++;
-      this.start = this.start % 60;
+      this.start = ++this.start % 60;
     },
   },
 };
