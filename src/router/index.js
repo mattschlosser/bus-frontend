@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../components/HelloWorld'
 import Electric from '../components/Electric'
+import New from "../components/New";
 Vue.use(VueRouter)
  
   const routes = [
@@ -10,6 +11,11 @@ Vue.use(VueRouter)
     name: 'Home',
     component: Home
   },
+  {
+    path: '/new', 
+    name: "new", 
+    component: New
+  }, 
   {
     path: '/electric', 
     name: 'Electric Buses', 
