@@ -1,11 +1,9 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../components/HelloWorld.vue'
 import Electric from '../components/ElectricBus.vue'
 import New from "../components/NewBusMap.vue";
-Vue.use(VueRouter)
 
-  const routes = [
+const routes = [
   {
     path: '/',
     name: 'Home',
@@ -31,8 +29,8 @@ Vue.use(VueRouter)
   }
 ]
 
-const router = new VueRouter({
-  mode: 'history',
+const router = createRouter({
+  history: createWebHistory(),
   routes
 })
 

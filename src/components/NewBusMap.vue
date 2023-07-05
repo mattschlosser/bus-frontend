@@ -48,7 +48,7 @@ export default {
         this.updateBuses();
         this.setupInterval();
     },
-    beforeDestroy() {
+    beforeUnmount() {
         clearInterval(this.interval)
     },
     methods: {

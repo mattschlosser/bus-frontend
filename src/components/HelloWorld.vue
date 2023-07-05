@@ -18,8 +18,8 @@
         <br>
       </div>
       <div id="canvas-container" class="bus">
-        <template v-for="canvas in ['canvas1', 'canvas2']">
-          <div :key="canvas" style="display: inline-block">
+        <template v-for="canvas in ['canvas1', 'canvas2']" :key="canvas">
+          <div style="display: inline-block">
             <bus-map :buses="buses[canvas]" :name="canvas" />
             <br>
             <interface-controls :for="canvas" />
@@ -66,7 +66,7 @@ export default {
       immediate: true,
     },
   },
-  destroyed() {
+  unmounted() {
     clearInterval(this.i);
   },
   methods: {

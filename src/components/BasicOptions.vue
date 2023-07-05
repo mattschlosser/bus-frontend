@@ -11,6 +11,7 @@ export default {
       default: 500
     }
   },
+  emits: ["update:speed"],
   methods: {
     reset($event) {
       this.$emit('update:speed', Number($event.target.value))

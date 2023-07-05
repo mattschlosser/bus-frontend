@@ -26,8 +26,8 @@
       </v-list-item>
       <template v-if="electricBuses.length && !(loading && firstTime)">
         <v-list-item-group v-model="active">
-          <template v-for="bus in electricBuses">
-            <v-list-item :id="active == bus.bus ? 'active' : null" :key="bus.bus" :value="bus.bus" dark>
+          <template v-for="bus in electricBuses" :key="bus.bus">
+            <v-list-item :id="active == bus.bus ? 'active' : null" :value="bus.bus" dark>
               <v-list-item-content>
                 <v-list-item-title>
                   <b>{{ bus.route.route_id }}</b>
@@ -293,7 +293,7 @@ export default {
   created() {
     let x = document.createElement("script");
     x.id = 'google-maps'
-    x.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.VUE_APP_MAPS_API_KEY}&callback=initMap`;
+    x.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_APP_MAPS_API_KEY}&callback=initMap`;
     document.querySelector("body").append(x);
     // get a list of electric busses
     this.refresh();
@@ -329,7 +329,7 @@ export default {
       } // if the map has not loaded, then location will be set to the lat, lng above when it does
 
       let d = new Date().valueOf();
-      fetch(`/bus/${d}/`)
+      fetch(`${import.meta.env.VITE_APP_API_URL}/bus/${d}`)
         .then((r) => r.json())
         .then((buses) => {
           Promise.all(
