@@ -36,7 +36,7 @@ export default {
       timeout = setTimeout(this.adjustCanvas, 16); // 60 fps = 16 ms per frame
     };
   },
-  destroyed() {
+  unmounted() {
     clearTimeout(this.timeout);
   },
   methods: {

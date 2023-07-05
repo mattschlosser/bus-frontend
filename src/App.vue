@@ -1,7 +1,9 @@
 <template>
   <v-app>
     <v-app-bar app>
-      Edmonton Bus Data
+      <v-app-bar-title>
+        Edmonton Bus Data
+      </v-app-bar-title>
     </v-app-bar>
     <v-main app>
       <router-view />
