@@ -1,11 +1,12 @@
 <template>
-    <div>
-        <div id="test" class="map"/>
-        <v-btn @click="deets">Click me To get dets</v-btn>
-    </div>
+  <div>
+    <div id="test" class="map" />
+    <v-btn @click="deets">
+      Click me To get dets
+    </v-btn>
+  </div>
 </template>
 <script>
-/* eslint-disable */
 import 'leaflet/dist/leaflet.js'
 import logo from '../assets/logo.png'
 import electric from '../assets/elec.png'
@@ -33,7 +34,7 @@ export default {
     },
     mounted() {
         this.map = L.map('test', {
-            center: [53.5150, -113.4757], 
+            center: [53.5150, -113.4757],
             zoom: 12
         })
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}/?{accessToken}', {
@@ -49,18 +50,18 @@ export default {
     },
     beforeDestroy() {
         clearInterval(this.interval)
-    }, 
+    },
     methods: {
         deets() {
             console.log(this.map.getCenter(), this.map.getZoom())
         },
         async updateBuses() {
-            let buses = await fetch('/bus/now').then(r => r.json())
+            let buses = await fetch(`${import.meta.env.VITE_APP_API_URL}/bus/now`).then(r => r.json())
             // TODO animate
             // for (let bus in this.buses){
             //     // remove all old markers
             //     bus.remove();
-            // }   
+            // }
             for (let bus of buses) {
                 // add new ones
                 // if (bus.)

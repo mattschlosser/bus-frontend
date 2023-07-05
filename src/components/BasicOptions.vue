@@ -1,16 +1,16 @@
 <template>
-    <div class="mt-3">
-      Update Interval (ms): <input :value="speed" @change="reset"/>
-    </div>
+  <div class="mt-3">
+    Update Interval (ms): <input :value="speed" @change="reset">
+  </div>
 </template>
-<script> 
+<script>
 export default {
   props: {
     speed: {
-      type: Number, 
+      type: Number,
       default: 500
     }
-  }, 
+  },
   methods: {
     reset($event) {
       this.$emit('update:speed', Number($event.target.value))

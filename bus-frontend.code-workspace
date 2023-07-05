@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"eslint.enable": true,
+		"files.trimTrailingWhitespace": true,
+		"editor.codeActionsOnSave": {
+			"source.fixAll": true
+		}
+	},
+	"extensions": {
+		"recommendations": [
+			"Vue.volar"
+		]
+	}
+}
