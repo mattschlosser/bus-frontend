@@ -1,7 +1,8 @@
 <template>
   <v-container
     dark
-    style="max-width: 450px; width: 100% position: relative; margin: 0 auto; padding: 0; overflow: hidden; max-height: 100vh">
+    style="max-width: 450px; width: 100% position: relative; margin: 0 auto; padding: 0; overflow: hidden; max-height: 100vh"
+  >
     <div
       id="map"
       style="height: 30vh; max-width: 100%; margin: 0; position: sticky; box-sizing: border-box;"
