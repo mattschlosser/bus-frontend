@@ -6,40 +6,50 @@
     <div
       id="map"
       style="height: 30vh; max-width: 100%; margin: 0; position: sticky; box-sizing: border-box;"
-    ></div>
+    />
     <v-list
+      id="bus-list"
       dark
       max-width="450"
-      id='bus-list'
       style="height: 64vh; box-sizing: border-box; overflow: auto; margin: 0 auto;"
     >
       <v-list-item>
-        <v-btn block small color="primary" @click="refresh" :disabled="loading">
+        <v-btn
+          block
+          small
+          color="primary"
+          :disabled="loading"
+          @click="refresh"
+        >
           {{ loading ? `REFRESHING` : 'REFRESH' }}
         </v-btn>
       </v-list-item>
       <template v-if="electricBuses.length && !(loading && firstTime)">
         <v-list-item-group v-model="active">
           <template v-for="bus in electricBuses">
-            <v-list-item :value="bus.bus" dark :key="bus.bus" :id="active == bus.bus ? 'active' : null">
+            <v-list-item :id="active == bus.bus ? 'active' : null" :key="bus.bus" :value="bus.bus" dark>
               <v-list-item-content>
                 <v-list-item-title>
-                  <b>{{bus.route.route_id}}</b>
+                  <b>{{ bus.route.route_id }}</b>
                 </v-list-item-title>
-                <v-list-item-subtitle>{{bus.route.trip_headsign}} - {{bus.bus}}</v-list-item-subtitle>
+                <v-list-item-subtitle>{{ bus.route.trip_headsign }} - {{ bus.bus }}</v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-action>
                 <v-list-item-action-text style="text-align: center;">
-                  <span style="font-size: 2em;">{{Number(bus.dist/0.005).toFixed(0)}}</span>
-                  <br />min.
+                  <span style="font-size: 2em;">{{ Number(bus.dist/0.005).toFixed(0) }}</span>
+                  <br>min.
                 </v-list-item-action-text>
               </v-list-item-action>
             </v-list-item>
           </template>
         </v-list-item-group>
       </template>
-      <v-list-item v-else-if="loading">Loading...</v-list-item>
-      <v-list-item v-else>No Electric Buses</v-list-item>
+      <v-list-item v-else-if="loading">
+        Loading...
+      </v-list-item>
+      <v-list-item v-else>
+        No Electric Buses
+      </v-list-item>
     </v-list>
     <v-footer dark style="height: 6vh;">
       <div style="width: 100%; text-align: center;">
@@ -305,7 +315,7 @@ export default {
             lat = locale.coords.latitude;
             lng = locale.coords.longitude;
             res();
-          }, 
+          },
           // user denies permission
           () => res()
         );
@@ -314,7 +324,7 @@ export default {
       if (this.firstTime) {
         if (map) {
           map.setCenter({ lat, lng });
-        } 
+        }
         this.firstTime = false;
       } // if the map has not loaded, then location will be set to the lat, lng above when it does
 
@@ -325,7 +335,7 @@ export default {
           Promise.all(
             buses
               .filter(({ bus }) => bus >= 8000)
-              .map(async (bus) => { 
+              .map(async (bus) => {
                 bus.route = await this.route(bus.trip);
                 // simple calculation to determine distance of bus from user's location
                 bus.dist = Math.sqrt(
@@ -381,7 +391,7 @@ export default {
             .finally(() => {
               this.loading = false
               this.$nextTick(() => {
-                // if a bus is selected and has moved up or down the list, 
+                // if a bus is selected and has moved up or down the list,
                 // scroll the user to the new position in the list automatically
                 if (this.active) {
                   this.$vuetify.goTo('#active', {container: '#bus-list'});

@@ -7,22 +7,22 @@
           Interested in finding an electric bus? Visit the
           <router-link to="/electric">Electric Bus Finder</router-link>
         </b>
-        <br />
-        <br />This is a simple interface to show Edmonton bus data.
+        <br>
+        <br>This is a simple interface to show Edmonton bus data.
         See
         <a
           href="https://github.com/mattschlosser/bus"
         >https://github.com/mattschlosser/bus</a> for more info
-        <br />
+        <br>
         <basic-options :speed="speed" @update:speed="speed = $event" />
-        <br />
+        <br>
       </div>
       <div id="canvas-container" class="bus">
         <template v-for="canvas in ['canvas1', 'canvas2']">
-          <div style="display: inline-block" :key="canvas">
+          <div :key="canvas" style="display: inline-block">
             <bus-map :buses="buses[canvas]" :name="canvas" />
-            <br />
-            <interface-controls :for="canvas"></interface-controls>
+            <br>
+            <interface-controls :for="canvas" />
           </div>
         </template>
       </div>
@@ -32,9 +32,9 @@
 
 <script>
 import configs from "../configs";
-import InterfaceControls from "./InterfaceControls";
-import BasicOptions from "./BasicOptions";
-import BusMap from "./BusMap";
+import InterfaceControls from "./InterfaceControls.vue";
+import BasicOptions from "./BasicOptions.vue";
+import BusMap from "./BusMap.vue";
 export default {
   components: {
     InterfaceControls,

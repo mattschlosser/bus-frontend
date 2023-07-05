@@ -1,14 +1,20 @@
 <template>
   <div>
-    <canvas :id="name" width="640" height="640"></canvas>
+    <canvas :id="name" width="640" height="640" />
   </div>
 </template>
 <script>
 import map from '../assets/map.png'
 export default {
   props: {
-    name: String,
-    buses: Array,
+    name: {
+      type: String,
+      required: true
+    },
+    buses: {
+      type: Array,
+      required: true
+    }
   },
   data() {
     return {

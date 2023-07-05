@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../components/HelloWorld'
-import Electric from '../components/Electric'
-import New from "../components/New";
+import Home from '../components/HelloWorld.vue'
+import Electric from '../components/ElectricBus.vue'
+import New from "../components/NewBusMap.vue";
 Vue.use(VueRouter)
- 
+
   const routes = [
   {
     path: '/',
@@ -12,13 +12,13 @@ Vue.use(VueRouter)
     component: Home
   },
   {
-    path: '/new', 
-    name: "new", 
+    path: '/new',
+    name: "new",
     component: New
-  }, 
+  },
   {
-    path: '/electric', 
-    name: 'Electric Buses', 
+    path: '/electric',
+    name: 'Electric Buses',
     component: Electric
   },
   {
@@ -27,13 +27,12 @@ Vue.use(VueRouter)
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/AboutPage.vue')
   }
 ]
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
   routes
 })
 

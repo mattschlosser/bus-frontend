@@ -1,12 +1,15 @@
 <template>
   <div>
     <div class="center">
-      <input type="date" v-model="date" />
-      <input type="time" v-model="time" />
+      <input v-model="date" type="date">
+      <input v-model="time" type="time">
       <label>
-        <input type="checkbox" v-model="electric" />Electric Buses Only
+        <input v-model="electric" type="checkbox">
+        Electric Buses Only
       </label>
-      <v-btn @click="now()">Now</v-btn>
+      <v-btn @click="now()">
+        Now
+      </v-btn>
     </div>
   </div>
 </template>
@@ -14,7 +17,10 @@
 import configs from "../configs";
 export default {
   props: {
-    for: String,
+    for: {
+      type: String,
+      required: true
+    }
   },
   data() {
     return configs[this.for];
