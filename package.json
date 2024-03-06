@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint --ext=.vue,.js --fix src/"
+    "lint": "eslint --ext=.vue,.js --fix src/",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@mdi/font": "^3.6.95",
@@ -20,6 +21,7 @@
   "devDependencies": {
     "eslint": "^8.44.0",
     "eslint-plugin-vue": "^9.15.1",
+    "husky": "^8.0.3",
     "vite": "^4.3.9"
   },
   "eslintConfig": {

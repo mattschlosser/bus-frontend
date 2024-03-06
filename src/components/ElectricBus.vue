@@ -60,7 +60,6 @@
   </v-container>
 </template>
 <script>
-/* eslint-disable */
 /* globals google */
 let map;
 let lat = 53.5212;
@@ -299,9 +298,9 @@ export default {
     this.refresh();
     this.i = setInterval(this.refresh, REFRESH_INTERVAL);
   },
-  destroyed() {
+  unmounted() {
     document.querySelector('#google-maps').remove()
-    clearInterval(i);
+    clearInterval(this.i);
   },
   methods: {
     // fetch the bus route
