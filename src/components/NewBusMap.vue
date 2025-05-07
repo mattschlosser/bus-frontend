@@ -2,11 +2,11 @@
 
 import 'leaflet/dist/leaflet.js'
 import '../plugins/AnimatedMarker';
-import { onBeforeUnmount } from 'vue';
-import { ref } from 'vue';
-import { onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import logo from '../assets/bus.png'
 import electric from '../assets/elec.png'
+import { useQuery } from '@tanstack/vue-query';
+import { getTrip } from '../api';
 // import 'leaflet/dist/leaflet.css'
 const map = ref(null);
 
@@ -24,6 +24,7 @@ const elec = new LeafIcon({
     iconUrl: electric
 })
 const buses = ref([]);
+const selectedBus = ref(null);
 
 const emits = defineEmits(["bus-details"]);
 
@@ -43,15 +44,40 @@ const updateBuses = async () => {
             let line = L.polyline([prev.getLatLng(), [bus.lat, bus.long]])
             prev.remove();
             let newMarker = L.animatedMarker(line.getLatLngs(), {title: bus.bus, icon: bus.bus >= 8000 ? elec : icon}).addTo(map.value)
-            newMarker.on("click", () => emits("bus-details", bus));
+            newMarker.on("click", () => handleBusClick(bus));
             buses.value[bus.bus] = newMarker;
         } else {
             let marker = L.marker([bus.lat, bus.long], {title: bus.bus, icon: bus.bus >= 8000 ? elec : icon}).addTo(map.value)
-            marker.on("click", () => emits("bus-details", bus))
+            marker.on("click", () => handleBusClick(bus))
             buses.value[bus.bus] = marker;
         }
     }
 }
+
+const { data: trip } = useQuery({
+    queryKey: ['bus', selectedBus],
+    queryFn: () => selectedBus.value ?  getTrip(selectedBus.value.trip) : null
+});
+
+
+
+const handleBusClick = (bus) => {
+    emits("bus-details", bus);
+    selectedBus.value = bus;
+}
+
+let previousPolyline = null;
+
+watch(trip, () => {
+    if (!trip) {
+        return;
+    }
+    previousPolyline?.remove();
+    console.log(trip.value.trip_headsign);
+    console.log(trip.value.geometry_line.coordinates[0]);
+    previousPolyline = L.polyline(trip.value.geometry_line.coordinates.map(e => e.map(([a, b]) => [b, a]))).addTo(map.value);
+    map.value.fitBounds(previousPolyline.getBounds());
+})
 
 const createMap = () => {
     map.value = L.map('test', {
@@ -64,7 +90,7 @@ const createMap = () => {
         id: 'mapbox/streets-v11',
         tileSize: 512,
         zoomOffset: -1,
-        accessToken: 'access_token=pk.eyJ1IjoibWF0dHNjaGxvc3NlciIsImEiOiJja21lM291b2kwbTZsMm5wMmttYzE4endnIn0.oOhD7Wo84XPpI2GAra3wHw'
+        accessToken: `access_token=${import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}`
     }).addTo(map.value)
 }
 
