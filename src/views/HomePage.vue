@@ -3,10 +3,17 @@ import { VBottomSheet } from 'vuetify/lib/labs/components.mjs';
 import NewBusMap from '../components/NewBusMap.vue';
 import { ref } from 'vue';
 import { VCard, VCardSubtitle, VCardText, VCardTitle } from 'vuetify/lib/components/index.mjs';
+import { useQuery } from '@tanstack/vue-query';
+import { getTrip } from '../api';
 
 const showBottomSheet = ref(false);
 /** @type {{bus: number, id: number, heading: number, speed: number}} */
 const bus = ref(null);
+
+const { data: trip } = useQuery({
+  queryKey: ['buses', bus],
+  queryFn: () => bus.value ? getTrip(bus.value.trip) : []
+})
 
 const viewBusDetails = (clickedBus) => {
     bus.value = clickedBus;
@@ -21,7 +28,7 @@ const viewBusDetails = (clickedBus) => {
         {{ bus.bus }}
       </VCardTitle>
       <VCardSubtitle>
-        Bus
+        {{ trip?.trip_headsign }}
       </VCardSubtitle>
       <VCardText>
         On Time<br>
