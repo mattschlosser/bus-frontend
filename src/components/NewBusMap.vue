@@ -1,6 +1,6 @@
 <script setup>
-
-import 'leaflet/dist/leaflet.js'
+import 'leaflet/dist/leaflet';
+import 'leaflet';
 import '../plugins/AnimatedMarker';
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import logo from '../assets/bus.png'
@@ -66,6 +66,7 @@ const handleBusClick = (bus) => {
     selectedBus.value = bus;
 }
 
+/** @type {import('leaflet').Polyline | null} */
 let previousPolyline = null;
 
 watch(trip, () => {
@@ -73,8 +74,6 @@ watch(trip, () => {
         return;
     }
     previousPolyline?.remove();
-    console.log(trip.value.trip_headsign);
-    console.log(trip.value.geometry_line.coordinates[0]);
     previousPolyline = L.polyline(trip.value.geometry_line.coordinates.map(e => e.map(([a, b]) => [b, a]))).addTo(map.value);
     map.value.fitBounds(previousPolyline.getBounds());
 })
@@ -82,7 +81,7 @@ watch(trip, () => {
 const createMap = () => {
     map.value = L.map('test', {
         center: [53.5150, -113.4757],
-        zoom: 12
+        zoom: 12,
     });
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}/?{accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
