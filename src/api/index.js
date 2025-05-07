@@ -48,7 +48,7 @@ const getBusStops = async (offset = null) => {
     let result = await fetch(url, {
         headers: {
             "Accept": "application/json",
-            "X-App-Token": import.meta.env.VITE_APP_TYLER_APP_TOKEN
+            "X-App-Token": import.meta.env.VITE_APP_SODA_APP_TOKEN
         }
     })
     if (result.ok) {
@@ -82,7 +82,7 @@ export const getTrip = async (tripId) => {
     let result = await  fetch(`https://data.edmonton.ca/resource/ctwr-tvrd.json?trip_id=${tripId}`, {
         headers: {
             "Accept": "application/json",
-            "X-App-Token": import.meta.env.VITE_APP_TYLER_APP_TOKEN
+            "X-App-Token": import.meta.env.VITE_APP_SODA_APP_TOKEN
         }
     })
     if (result.ok) {
