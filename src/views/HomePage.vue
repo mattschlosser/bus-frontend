@@ -1,8 +1,6 @@
 <script setup>
-import { VBottomSheet } from 'vuetify/lib/labs/components.mjs';
 import NewBusMap from '../components/NewBusMap.vue';
 import { ref } from 'vue';
-import { VCard, VCardSubtitle, VCardText, VCardTitle } from 'vuetify/lib/components/index.mjs';
 import { useQuery } from '@tanstack/vue-query';
 import { getTrip } from '../api';
 

@@ -10,13 +10,13 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@mdi/font": "^3.6.95",
+    "@mdi/font": "^7.4.47",
     "@tanstack/vue-query": "^5.75.4",
     "leaflet": "^1.9.4",
     "roboto-fontface": "*",
-    "vue": "^3.3.4",
-    "vue-router": "^4.2.3",
-    "vuetify": "^3.3.7"
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.1",
+    "vuetify": "^3.8.3"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.3",
