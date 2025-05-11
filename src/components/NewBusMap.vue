@@ -2,13 +2,13 @@
 import 'leaflet/dist/leaflet';
 import 'leaflet';
 import '../plugins/AnimatedMarker';
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
+import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue';
 import logo from '../assets/bus.png'
 import electric from '../assets/elec.png'
 import { useQuery } from '@tanstack/vue-query';
-import { getTrip } from '../api';
+import { getTrip, getBusStopTimes, getAllBusStops } from '../api';
 // import 'leaflet/dist/leaflet.css'
-const map = ref(null);
+let map = null
 
 let interval = null;
 
@@ -23,7 +23,9 @@ const icon = new LeafIcon({
 const elec = new LeafIcon({
     iconUrl: electric
 })
-const buses = ref([]);
+const buses = {};
+
+/** @type {import("vue").Ref<{bus: string, lat: string, long: string, trip: string}|null>} */
 const selectedBus = ref(null);
 
 const emits = defineEmits(["bus-details"]);
@@ -38,18 +40,19 @@ const updateBuses = async () => {
     // }
     for (let bus of newBuses) {
         // add new ones
-        // if (bus.)
-        if (buses.value[bus.bus]) {
-            let prev = buses.value[bus.bus];
+        if (buses[bus.bus]) {
+            // bus already in list
+            let prev = buses[bus.bus];
             let line = L.polyline([prev.getLatLng(), [bus.lat, bus.long]])
             prev.remove();
-            let newMarker = L.animatedMarker(line.getLatLngs(), {title: bus.bus, icon: bus.bus >= 8000 ? elec : icon}).addTo(map.value)
+            let newMarker = L.animatedMarker(line.getLatLngs(), {title: bus.bus, icon: bus.bus >= 8000 ? elec : icon}).addTo(map)
             newMarker.on("click", () => handleBusClick(bus));
-            buses.value[bus.bus] = newMarker;
+            buses[bus.bus] = newMarker;
         } else {
-            let marker = L.marker([bus.lat, bus.long], {title: bus.bus, icon: bus.bus >= 8000 ? elec : icon}).addTo(map.value)
+            // bus not in list
+            let marker = L.marker([bus.lat, bus.long], {title: bus.bus, icon: bus.bus >= 8000 ? elec : icon}).addTo(map)
             marker.on("click", () => handleBusClick(bus))
-            buses.value[bus.bus] = marker;
+            buses[bus.bus] = marker;
         }
     }
 }
@@ -59,7 +62,26 @@ const { data: trip } = useQuery({
     queryFn: () => selectedBus.value ?  getTrip(selectedBus.value.trip) : null
 });
 
+const { data: tripStops } = useQuery({
+    queryKey: ['trip-stops', selectedBus],
+    queryFn: () => selectedBus.value ? getBusStopTimes(selectedBus.value.trip) : []
+});
 
+const { data: stops } = useQuery({
+    queryKey: ['stops'],
+    queryFn: () => getAllBusStops()
+});
+
+/** @type {import("vue").CopmutedRef<Record<string, import("../api/index").BusStop>>} */
+const stopsHashMap = computed(() => {
+    if (!stops.value) {
+        return {};
+    }
+    return stops.value.reduce((acc, stop) => {
+        acc[stop.stop_id] = {...stop};
+        return acc;
+    }, {})
+});
 
 const handleBusClick = (bus) => {
     emits("bus-details", bus);
@@ -70,27 +92,60 @@ const handleBusClick = (bus) => {
 let previousPolyline = null;
 
 watch(trip, () => {
-    if (!trip) {
+    if (!trip.value) {
         return;
     }
     previousPolyline?.remove();
-    previousPolyline = L.polyline(trip.value.geometry_line.coordinates.map(e => e.map(([a, b]) => [b, a]))).addTo(map.value);
-    map.value.fitBounds(previousPolyline.getBounds());
+    previousPolyline = L.polyline(trip.value.geometry_line.coordinates.map(e => e.map(([a, b]) => [b, a]))).addTo(map);
+    map.fitBounds(previousPolyline.getBounds());
+})
+
+/** @type {import("leaflet").Marker[]} */
+let stopMarkers = [];
+
+watch(tripStops, () => {
+    if (!tripStops.value) {
+        return;
+    }
+    for (const marker of stopMarkers) {
+        marker?.remove();
+    }
+    stopMarkers = [];
+    for (const stop of tripStops.value) {
+        /** @type {import("../api/index").BusStop} */
+        const stopDetails = stopsHashMap.value?.[stop.stop_id];
+        if (!stopDetails) {
+            continue;
+        }
+        if (!stopDetails.stop_lat || !stopDetails.stop_lon) {
+            console.error("No location details for ", stopDetails);
+            continue;
+        }
+        const marker = L.marker(
+            [stopDetails.stop_lat, stopDetails.stop_lon], 
+            {
+                title: `${stopDetails.stop_name} ${stop.arrival_time_fixed}`
+            }
+        ).addTo(map);
+        stopMarkers.push(marker);
+    }
 })
 
 const createMap = () => {
-    map.value = L.map('test', {
+    map = L.map('test', {
         center: [53.5150, -113.4757],
         zoom: 12,
     });
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}/?{accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
+        minZoom: 10,
+        bounds: [[53.6, -113.7], [53.33, -113.3]],
         id: 'mapbox/streets-v11',
         tileSize: 512,
         zoomOffset: -1,
         accessToken: `access_token=${import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}`
-    }).addTo(map.value)
+    }).addTo(map)
 }
 
 const setUpInterval = () => {
