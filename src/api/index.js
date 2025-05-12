@@ -12,6 +12,14 @@
  */
 
 /**
+ * @typedef {Object} Bus
+ * @property {string} bus The bus id, or the number that uniquely identifies the physical bus
+ * @property {string} lat 
+ * @property {string} long
+ * 
+ */
+
+/**
  * @typedef {Object} GeometryLine
  * @property {"MultiLineString"} type
  * @property {CoridnateSet[]} coordinates

@@ -23,6 +23,10 @@ const icon = new LeafIcon({
 const elec = new LeafIcon({
     iconUrl: electric
 })
+
+/**
+ * @type {Record<string, import("../api/index").Bus>}
+ */
 const buses = {};
 
 /** @type {import("vue").Ref<{bus: string, lat: string, long: string, trip: string}|null>} */
@@ -30,14 +34,34 @@ const selectedBus = ref(null);
 
 const emits = defineEmits(["bus-details"]);
 
-const updateBuses = async () => {
+/**
+ * Given a list of new buses, removes the buses from the map that are no longer 
+ * returned by the API
+ * 
+ * @param {{bus: string}[]} newBuses 
+ */
+const removeOldBuses = (newBuses) => {
+    // create hash map for faster searching
+    const newBusHashMap = newBuses.reduce((acc, bus) => {
+        acc[bus.bus] = true;
+        return acc;
+    }, /** @type {Record<string, true>} */ ({}));
+    // remove old buses
+    for (const index in buses) {
+        if (!(index in newBusHashMap)) {
+            buses[index].remove();
+            delete buses[index];
+        }
+    }
+}
 
-    let newBuses = await fetch(`${import.meta.env.VITE_APP_API_URL}/bus/now`).then(r => r.json())
-    // TODO animate
-    // for (let bus in this.newBuses){
-    //     // remove all old markers
-    //     bus.remove();
-    // }
+const updateBuses = async () => {
+    if (document.visibilityState == "hidden") {
+        return;
+    }
+    /** @type {{}[]} */
+    let newBuses = await fetch(`${import.meta.env.VITE_APP_API_URL}/bus/now`).then(r => r.json());
+    removeOldBuses(newBuses);
     for (let bus of newBuses) {
         // add new ones
         if (buses[bus.bus]) {
