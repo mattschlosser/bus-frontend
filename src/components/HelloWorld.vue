@@ -42,7 +42,7 @@ export default {
     BasicOptions,
   },
   data: () => ({
-    speed: 500,
+    speed: 5000,
     map: null,
     start: 0,
     interval: null,
@@ -76,7 +76,7 @@ export default {
           0,
           3
         )}${this.start.toLocaleString("en", { minimumIntegerDigits: 2 })}`;
-        fetch(`/bus/${configs[key].date}/${time}/4`, { method: "get" })
+        fetch(`${import.meta.env.VITE_APP_API_URL}/bus/${configs[key].date}/${time}/4`, { method: "get" })
           .then((res) => res.json())
           .then((rows) =>
             rows.filter((e) => (configs[key].electric ? e.bus >= 8000 : true))
