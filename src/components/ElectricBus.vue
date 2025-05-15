@@ -32,7 +32,7 @@
                 <v-list-item-title>
                   <b>{{ bus.route.route_id }}</b>
                 </v-list-item-title>
-                <v-list-item-subtitle>{{ bus.route.trip_headsign }} - {{ bus.bus }}</v-list-item-subtitle>
+                <v-list-item-subtitle>{{ bus.route?.trip_headsign }} - {{ bus.bus }}</v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-action>
                 <v-list-item-action-text style="text-align: center;">
@@ -65,202 +65,202 @@ let map;
 let lat = 53.5212;
 let lng = -113.5213;
 
-window.initMap = async () => {
-  map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat, lng },
-    zoom: 10,
-    zoomControl: false,
-    streetViewControl: false,
-    mapTypeControl: false,
-    fullscreenControl: false,
-    styles: [
-      {
-        elementType: "geometry",
-        stylers: [
-          {
-            color: "#212121",
-          },
-        ],
-      },
-      {
-        elementType: "labels.icon",
-        stylers: [
-          {
-            visibility: "off",
-          },
-        ],
-      },
-      {
-        elementType: "labels.text.fill",
-        stylers: [
-          {
-            color: "#757575",
-          },
-        ],
-      },
-      {
-        elementType: "labels.text.stroke",
-        stylers: [
-          {
-            color: "#212121",
-          },
-        ],
-      },
-      {
-        featureType: "administrative",
-        elementType: "geometry",
-        stylers: [
-          {
-            color: "#757575",
-          },
-        ],
-      },
-      {
-        featureType: "administrative.country",
-        elementType: "labels.text.fill",
-        stylers: [
-          {
-            color: "#9e9e9e",
-          },
-        ],
-      },
-      {
-        featureType: "administrative.land_parcel",
-        stylers: [
-          {
-            visibility: "off",
-          },
-        ],
-      },
-      {
-        featureType: "administrative.locality",
-        elementType: "labels.text.fill",
-        stylers: [
-          {
-            color: "#bdbdbd",
-          },
-        ],
-      },
-      {
-        featureType: "poi",
-        elementType: "labels.text.fill",
-        stylers: [
-          {
-            color: "#757575",
-          },
-        ],
-      },
-      {
-        featureType: "poi.park",
-        elementType: "geometry",
-        stylers: [
-          {
-            color: "#181818",
-          },
-        ],
-      },
-      {
-        featureType: "poi.park",
-        elementType: "labels.text.fill",
-        stylers: [
-          {
-            color: "#616161",
-          },
-        ],
-      },
-      {
-        featureType: "poi.park",
-        elementType: "labels.text.stroke",
-        stylers: [
-          {
-            color: "#1b1b1b",
-          },
-        ],
-      },
-      {
-        featureType: "road",
-        elementType: "geometry.fill",
-        stylers: [
-          {
-            color: "#2c2c2c",
-          },
-        ],
-      },
-      {
-        featureType: "road",
-        elementType: "labels.text.fill",
-        stylers: [
-          {
-            color: "#8a8a8a",
-          },
-        ],
-      },
-      {
-        featureType: "road.arterial",
-        elementType: "geometry",
-        stylers: [
-          {
-            color: "#373737",
-          },
-        ],
-      },
-      {
-        featureType: "road.highway",
-        elementType: "geometry",
-        stylers: [
-          {
-            color: "#3c3c3c",
-          },
-        ],
-      },
-      {
-        featureType: "road.highway.controlled_access",
-        elementType: "geometry",
-        stylers: [
-          {
-            color: "#4e4e4e",
-          },
-        ],
-      },
-      {
-        featureType: "road.local",
-        elementType: "labels.text.fill",
-        stylers: [
-          {
-            color: "#616161",
-          },
-        ],
-      },
-      {
-        featureType: "transit",
-        elementType: "labels.text.fill",
-        stylers: [
-          {
-            color: "#757575",
-          },
-        ],
-      },
-      {
-        featureType: "water",
-        elementType: "geometry",
-        stylers: [
-          {
-            color: "#000000",
-          },
-        ],
-      },
-      {
-        featureType: "water",
-        elementType: "labels.text.fill",
-        stylers: [
-          {
-            color: "#3d3d3d",
-          },
-        ],
-      },
-    ],
-  });
-};
+// window.initMap = async () => {
+//   map = new google.maps.Map(document.getElementById("map"), {
+//     center: { lat, lng },
+//     zoom: 10,
+//     zoomControl: false,
+//     streetViewControl: false,
+//     mapTypeControl: false,
+//     fullscreenControl: false,
+//     styles: [
+//       {
+//         elementType: "geometry",
+//         stylers: [
+//           {
+//             color: "#212121",
+//           },
+//         ],
+//       },
+//       {
+//         elementType: "labels.icon",
+//         stylers: [
+//           {
+//             visibility: "off",
+//           },
+//         ],
+//       },
+//       {
+//         elementType: "labels.text.fill",
+//         stylers: [
+//           {
+//             color: "#757575",
+//           },
+//         ],
+//       },
+//       {
+//         elementType: "labels.text.stroke",
+//         stylers: [
+//           {
+//             color: "#212121",
+//           },
+//         ],
+//       },
+//       {
+//         featureType: "administrative",
+//         elementType: "geometry",
+//         stylers: [
+//           {
+//             color: "#757575",
+//           },
+//         ],
+//       },
+//       {
+//         featureType: "administrative.country",
+//         elementType: "labels.text.fill",
+//         stylers: [
+//           {
+//             color: "#9e9e9e",
+//           },
+//         ],
+//       },
+//       {
+//         featureType: "administrative.land_parcel",
+//         stylers: [
+//           {
+//             visibility: "off",
+//           },
+//         ],
+//       },
+//       {
+//         featureType: "administrative.locality",
+//         elementType: "labels.text.fill",
+//         stylers: [
+//           {
+//             color: "#bdbdbd",
+//           },
+//         ],
+//       },
+//       {
+//         featureType: "poi",
+//         elementType: "labels.text.fill",
+//         stylers: [
+//           {
+//             color: "#757575",
+//           },
+//         ],
+//       },
+//       {
+//         featureType: "poi.park",
+//         elementType: "geometry",
+//         stylers: [
+//           {
+//             color: "#181818",
+//           },
+//         ],
+//       },
+//       {
+//         featureType: "poi.park",
+//         elementType: "labels.text.fill",
+//         stylers: [
+//           {
+//             color: "#616161",
+//           },
+//         ],
+//       },
+//       {
+//         featureType: "poi.park",
+//         elementType: "labels.text.stroke",
+//         stylers: [
+//           {
+//             color: "#1b1b1b",
+//           },
+//         ],
+//       },
+//       {
+//         featureType: "road",
+//         elementType: "geometry.fill",
+//         stylers: [
+//           {
+//             color: "#2c2c2c",
+//           },
+//         ],
+//       },
+//       {
+//         featureType: "road",
+//         elementType: "labels.text.fill",
+//         stylers: [
+//           {
+//             color: "#8a8a8a",
+//           },
+//         ],
+//       },
+//       {
+//         featureType: "road.arterial",
+//         elementType: "geometry",
+//         stylers: [
+//           {
+//             color: "#373737",
+//           },
+//         ],
+//       },
+//       {
+//         featureType: "road.highway",
+//         elementType: "geometry",
+//         stylers: [
+//           {
+//             color: "#3c3c3c",
+//           },
+//         ],
+//       },
+//       {
+//         featureType: "road.highway.controlled_access",
+//         elementType: "geometry",
+//         stylers: [
+//           {
+//             color: "#4e4e4e",
+//           },
+//         ],
+//       },
+//       {
+//         featureType: "road.local",
+//         elementType: "labels.text.fill",
+//         stylers: [
+//           {
+//             color: "#616161",
+//           },
+//         ],
+//       },
+//       {
+//         featureType: "transit",
+//         elementType: "labels.text.fill",
+//         stylers: [
+//           {
+//             color: "#757575",
+//           },
+//         ],
+//       },
+//       {
+//         featureType: "water",
+//         elementType: "geometry",
+//         stylers: [
+//           {
+//             color: "#000000",
+//           },
+//         ],
+//       },
+//       {
+//         featureType: "water",
+//         elementType: "labels.text.fill",
+//         stylers: [
+//           {
+//             color: "#3d3d3d",
+//           },
+//         ],
+//       },
+//     ],
+//   });
+// };
 const REFRESH_INTERVAL = 60000; // 1 minute
 // import goTo from 'vuetify/es5/services';
 export default {
@@ -290,16 +290,12 @@ export default {
     }
   },
   created() {
-    let x = document.createElement("script");
-    x.id = 'google-maps'
-    x.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_APP_MAPS_API_KEY}&callback=initMap`;
-    document.querySelector("body").append(x);
     // get a list of electric busses
     this.refresh();
-    this.i = setInterval(this.refresh, REFRESH_INTERVAL);
+    this.i = setInterval(() => this.refresh(), REFRESH_INTERVAL);
   },
   unmounted() {
-    document.querySelector('#google-maps').remove()
+    document.querySelector('#google-maps')?.remove()
     clearInterval(this.i);
   },
   methods: {
@@ -311,6 +307,7 @@ export default {
         navigator.geolocation.getCurrentPosition(
           // user granted permission
           (locale) => {
+            console.log("Permission read")
             lat = locale.coords.latitude;
             lng = locale.coords.longitude;
             res();
@@ -327,8 +324,7 @@ export default {
         this.firstTime = false;
       } // if the map has not loaded, then location will be set to the lat, lng above when it does
 
-      let d = new Date().valueOf();
-      fetch(`${import.meta.env.VITE_APP_API_URL}/bus/${d}`)
+      fetch(`${import.meta.env.VITE_APP_API_URL}/bus/now`)
         .then((r) => r.json())
         .then((buses) => {
           Promise.all(
@@ -399,12 +395,21 @@ export default {
             });
         });
     },
-    route(trip) {
-      return fetch(
-        `https://data.edmonton.ca/resource/ctwr-tvrd.json?trip_id=${trip}`
+    async route(trip) {
+      let result = await fetch(
+        `https://data.edmonton.ca/resource/ctwr-tvrd.json?trip_id=${trip}`,
+        {
+          headers: {
+            "Accept": "application/json",
+            "X-App-Token": import.meta.env.VITE_APP_SODA_APP_TOKEN
+          }
+        }
       )
-        .then((r) => r.json())
-        .then((r) => r[0]);
+      if (result.ok) {
+        let trips = result.json();
+        return trips[0];
+      }
+      return null;
     },
     listClickHandler(item) {
       this.active = item.bus;
